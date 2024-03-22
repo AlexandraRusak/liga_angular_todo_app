@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TodoEntryComponent } from "../todo-entry/todo-entry.component";
+
 
 export class TodoEntry {
   _status: "regular" | "important" | "done" = "regular";
@@ -11,7 +11,8 @@ export class TodoEntry {
     id: number,
     header: string,
     body: string,
-    important: boolean = false) {
+    important: boolean = false)
+  {
     this.id = id
     this.header = header
     this.body = body
@@ -41,10 +42,23 @@ export class TodoEntry {
   }
 
   public makeDone(): void {
-    this.status = "done"
+    if (this.status !== "done") {
+      this.status = "done"
+    } else {this.status = "regular"}
   }
+
 }
 
+export interface Entry {
+  header: string;
+  body: string;
+  important: boolean;
+}
+
+export interface SearchRequest {
+  search: string;
+  searchStatus: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -54,43 +68,61 @@ export class TodoListService {
   _lastId = 0
   public todoList: Array<TodoEntry> = []
 
+
+
   constructor(
   ) {
     // for testing
-    // this.add('header1','body1',false)
-    // this.add('header2','body2',false)
-    // this.add('header3','body3',false)
-    // this.delete(1)
-    // this.changeImportant(0)
-    // this.changeDone(2)
+    this.add({header: "heading 0", body: "body 0", important: true})
+    this.add({header: "heading 1", body: "body 1", important: false})
+    this.add({header: "heading 2", body: "body 2", important: false})
+
   }
 
 
-  public delete(id: number): void{
-    this.todoList = this.todoList.filter(todoList => todoList.id !== id);
+  public delete(id: string): void {
+    const entryId = Number(id)
+    this.todoList = this.todoList.filter(todo => todo.id !== entryId);
   }
 
-  public add(header:string, body: string, important:boolean = false): void{
+  public add(obj: Entry): void{
     const newTodoEntry = new TodoEntry(
         this._lastId++,
-        header,
-        body,
-        important);
+        obj.header,
+        obj.body,
+        obj.important);
     this.todoList.push(newTodoEntry)
   }
 
-  public changeImportant(id: number): void{
-    this.todoList.forEach(todo => {
-      if (todo.id===id){
+  public changeImportant(id: string): void{
+    const entryId: number = Number(id)
+    this.todoList.findIndex(todo => {
+      if (todo.id=== entryId){
         todo.switchImportant()
       }
     })
   }
 
-  public changeDone(id: number): void{
-    this.todoList.forEach(todo => {
-      if (todo.id===id){
+  public changeDone(id: string): void{
+    const entryId = Number(id)
+    this.todoList.findIndex(todo => {
+      if (todo.id===entryId){
         todo.makeDone()
+      }
+    })
+  }
+
+  public searchEntries (obj: SearchRequest)  {
+    console.log(obj.search)
+    this.todoList = this.todoList.filter(todo => {
+      if (obj.searchStatus) {
+        return todo.header == obj.search || todo.body == obj.search && todo.status == obj.searchStatus
+      } else if (!obj.searchStatus){
+        return todo.header == obj.search || todo.body == obj.search
+      } else if (!obj.search) {
+        return todo.status === obj.searchStatus
+      } else {
+        return null
       }
     })
   }

@@ -1,10 +1,19 @@
-<div *ngFor="let todoEntry of todoListService.todoList">
+<h1>My To-do List</h1>
+<app-search-bar (newSearchEvent)="todoListService.searchEntries($event)"></app-search-bar>
+  <app-entry-form (newEntryEvent)="todoListService.add($event)"></app-entry-form>
+<!--<app-entry-form></app-entry-form>-->
+<h2>To-dos:</h2>
+  <div *ngFor="let todoEntry of todoListService.todoList">
   <app-todo-entry
     [id]="todoEntry.id"
     [header]="todoEntry.header"
     [body]="todoEntry.body"
-    [status]="todoEntry.status"/>
+    [status]="todoEntry.status"
+    (newStatusEvent)="todoListService.changeImportant($event)"
+    (newDoneEvent)="todoListService.changeDone($event)"
+    (newDeleteEvent)="todoListService.delete($event)"
+  ></app-todo-entry>
 </div>
-<button (click)="todoListService.add('test','test')">ADD</button>
-<input [(ngModel)]="delId">
-<button (click)="todoListService.delete(+delId)">DEL</button>
+<!--<button (click)="todoListService.add('test','test')">ADD</button>-->
+<!--<input [(ngModel)]="delId">-->
+<!--<button (click)="todoListService.delete(+delId)">DEL</button>-->

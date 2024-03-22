@@ -1,1 +1,14 @@
-<p>todo-entry works!</p>
+<section class ="todo-entry">
+<!--  <p>{{id}}</p>-->
+  <p>{{header}}</p>
+  <p>{{body}}</p>
+  <div class ="todo-status">
+  <p>{{status}}</p>
+    <button (click)="toggleStatus($event)" data-id="{{id}}">Change status</button>
+  </div>
+  <label for="todo-done">Done!
+    <input type="checkbox" id="todo-done" data-id="{{id}}" (click) = "markDone($event)"/>
+  </label>
+    <button  id="todo-delete" data-id="{{id}}" (click) = "delete($event)">Delete to-do</button>
+
+</section>

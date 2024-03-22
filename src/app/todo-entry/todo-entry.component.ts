@@ -1,46 +1,49 @@
-import { Component } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TodoListService} from "../services/todo-list.service";
+import {NgForOf} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+
 
 @Component({
   selector: 'app-todo-entry',
   standalone: true,
-  imports: [],
+  imports: [
+    NgForOf,
+    FormsModule
+  ],
   templateUrl: './todo-entry.component.html',
   styleUrl: './todo-entry.component.scss'
 })
 export class TodoEntryComponent {
-  _status: "regular" | "important" | "done" = "regular";
-  header: string
-  body: string
 
-  constructor(header: string, body: string, important: boolean = false) {
-    this.header = header
-    this.body = body
-    if (important) {
-      this.status="important"
-    }
-    else {
-      this.status="regular"
-    }
+  @Input()
+  id!: number
+  @Input()
+  header!: string
+  @Input()
+  body!: string
+  @Input()
+  status!: "regular" | "important" | "done";
+
+  constructor( ) {   }
+
+  @Output() newStatusEvent = new EventEmitter<any>();
+
+  @Output() newDoneEvent = new EventEmitter<any>();
+
+  @Output() newDeleteEvent = new EventEmitter<any>()
+
+  toggleStatus (event: any) {
+    this.newStatusEvent.emit(event.target.id)
   }
 
-  public set status(value: "regular" | "important" | "done") {
-    this._status = value
+  markDone (event: any) {
+    this.newDoneEvent.emit(event.target.id)
+    // console.log(event.target)
   }
 
-  public get status(): "regular" | "important" | "done" {
-    return this._status
+  delete (event: any) {
+    this.newDeleteEvent.emit(event.target.id)
   }
 
-  public switchImportant(): void {
-    if (this.status==="regular") {
-      this.status = "important"
-    }
-    else {
-      this.status = "regular"
-    }
-  }
-
-  public makeDone(): void {
-    this.status = "done"
-  }
 }

@@ -1,0 +1,18 @@
+<form #myForm="ngForm" novalidate>
+  <h2>Add a new to-do:</h2>
+  <label for="todo-heading">Please add to-do heading</label>
+  <input id="todo-heading" type="text" name="header" [(ngModel)]="header">
+    <label for="todo-description">Please add to-do description</label>
+  <input id="todo-description" type="text" name="body" [(ngModel)]="body">
+    <label for="todo-status">Status:
+    <select id="todo-status" name="important" [(ngModel)]="important">
+      <option value="">Select status:</option>
+      <option value="true">important</option>
+      <option value="false">regular</option>
+
+<!--      <option value="done">done</option>-->
+
+    </select>
+  </label>
+  <button (click)="submit(myForm)" >Add to-do!</button>
+</form>

@@ -1,0 +1,14 @@
+<form #myForm="ngForm" novalidate>
+  <h2>Find a to-do:</h2>
+  <label for="search-field">Find</label>
+  <input id="search-field" type="text" name="search" [(ngModel)]="search">
+  <label for="filter-status">Filter:
+    <select name="searchStatus" id="filter-status" [(ngModel)]="searchStatus">
+      <option value="">Select status:</option>
+      <option value="important">important</option>
+      <option value="regular">regular</option>
+      <option value="done">done</option>
+    </select>
+  </label>
+  <button (click)="submit(myForm)">Find to-do!</button>
+</form>
