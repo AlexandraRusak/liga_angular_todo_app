@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 
+enum EntryStatus {
+  regular = "regular",
+  important = "important",
+  done = "done"
+}
 
 export class TodoEntry {
-  _status: "regular" | "important" | "done" = "regular";
+  _status: EntryStatus = EntryStatus.regular;
+  _beforeDoneStatus: EntryStatus = EntryStatus.regular;
   header: string
   body: string
+  show: boolean = true
   id:number
 
   constructor(
@@ -17,34 +24,35 @@ export class TodoEntry {
     this.header = header
     this.body = body
     if (important) {
-      this.status="important"
+      this.status=EntryStatus.important
     }
     else {
-      this.status="regular"
+      this.status=EntryStatus.regular
     }
   }
 
-  public set status(value: "regular" | "important" | "done") {
+  public set status(value: EntryStatus) {
     this._status = value
   }
 
-  public get status(): "regular" | "important" | "done" {
+  public get status(): EntryStatus {
     return this._status
   }
 
   public switchImportant(): void {
-    if (this.status==="regular") {
-      this.status = "important"
+    if (this.status===EntryStatus.regular) {
+      this.status = EntryStatus.important
     }
     else {
-      this.status = "regular"
+      this.status = EntryStatus.regular
     }
   }
 
   public makeDone(): void {
-    if (this.status !== "done") {
-      this.status = "done"
-    } else {this.status = "regular"}
+    if (this.status !== EntryStatus.done) {
+      this._beforeDoneStatus = this.status
+      this.status = EntryStatus.done
+    } else {this.status = this._beforeDoneStatus}
   }
 
 }
@@ -113,18 +121,17 @@ export class TodoListService {
   }
 
   public searchEntries (obj: SearchRequest)  {
-    console.log(obj.search)
-    this.todoList = this.todoList.filter(todo => {
-      if (obj.searchStatus) {
-        return todo.header == obj.search || todo.body == obj.search && todo.status == obj.searchStatus
-      } else if (!obj.searchStatus){
-        return todo.header == obj.search || todo.body == obj.search
-      } else if (!obj.search) {
-        return todo.status === obj.searchStatus
-      } else {
-        return null
+    this.todoList.forEach(todo => {
+      let isShown: boolean = true
+      if (obj.search.length>0) {
+        isShown = isShown && (todo.header == obj.search)
       }
+      if (obj.searchStatus.length>0) {
+        isShown = isShown && (obj.searchStatus==todo.status)
+      }
+      todo.show = isShown
     })
+
   }
 
 }

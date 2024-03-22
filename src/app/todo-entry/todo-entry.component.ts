@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TodoListService} from "../services/todo-list.service";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 
 
@@ -9,7 +9,8 @@ import {FormsModule} from "@angular/forms";
   standalone: true,
   imports: [
     NgForOf,
-    FormsModule
+    FormsModule,
+    NgIf
   ],
   templateUrl: './todo-entry.component.html',
   styleUrl: './todo-entry.component.scss'
@@ -24,6 +25,8 @@ export class TodoEntryComponent {
   body!: string
   @Input()
   status!: "regular" | "important" | "done";
+  @Input()
+  show!: boolean;
 
   constructor( ) {   }
 

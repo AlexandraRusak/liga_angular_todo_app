@@ -14,12 +14,12 @@ export class EntryFormComponent {
   header: string = ""
   body: string = ""
   important: boolean = false
+
   @Output() newEntryEvent = new EventEmitter<any>();
+
   submit(form: NgForm){
     const entry = {...form.value}
-    if (entry.important === "true") {
-      entry.important = true
-    } else {entry.important = false}
+    entry.important = entry.important === "true";
     this.newEntryEvent.emit(entry);
   }
 }

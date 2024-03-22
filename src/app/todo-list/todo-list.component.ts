@@ -16,8 +16,6 @@ import {SearchBarComponent} from "../search-bar/search-bar.component";
 })
 export class TodoListComponent {
 
-  // public delId!: number
-
  constructor(
    public todoListService: TodoListService
  ) {
