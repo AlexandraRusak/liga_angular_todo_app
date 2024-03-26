@@ -1,0 +1,14 @@
+<app-navbar></app-navbar>
+<form #myForm="ngForm" action="">
+  <h2>Register</h2>
+  <label for="register-email">E-mail:
+    <input type="text" id="register-email" name="email" [(ngModel)]="email">
+  </label>
+  <label for="register-password">E-mail:
+    <input type="text" id="register-password" [(ngModel)]="password">
+  </label>
+  <label for="register-fio">Name:
+    <input type="text" id="register-fio" [(ngModel)]="fio">
+  </label>
+  <button (click)="submit(myForm)">Register</button>
+</form>
