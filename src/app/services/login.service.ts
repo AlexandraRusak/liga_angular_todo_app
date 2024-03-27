@@ -27,6 +27,11 @@ export class LoginService {
   userName:string = "";
   message: string = "";
 
+  public get token(): string | null {
+    return localStorage.getItem("token");
+  }
+
+
   public logout () {
     this.isLoggedIn = false;
     this.userName = "";
