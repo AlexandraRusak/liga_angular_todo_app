@@ -1,9 +1,21 @@
-<nav>
+<nav *ngIf="!loginService.isLoggedIn">
   <ul>
     <div class="nav">
     <a routerLink="/login">Login</a>
     <a routerLink="/todo-list">To-do list</a>
     <a routerLink="">Home</a>
+      <a routerLink="/register">Register</a>
+    </div>
+  </ul>
+</nav>
+
+<nav *ngIf="loginService.isLoggedIn">
+  <ul>
+    <div class="nav">
+      <button (click) = "loginService.logout()">Logout</button>
+      <p>User: {{loginService.userName}}</p>
+      <a routerLink="/todo-list">To-do list</a>
+      <a routerLink="">Home</a>
     </div>
   </ul>
 </nav>

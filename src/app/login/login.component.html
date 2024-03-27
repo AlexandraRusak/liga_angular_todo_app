@@ -1,13 +1,16 @@
+<app-navbar></app-navbar>
 <form #myForm="ngForm" action="">
   <h2>Please login</h2>
   <label for="login-email">E-mail:
     <input type="text" id="login-email" name="email" [(ngModel)]="email">
   </label>
-  <label for="login-password">E-mail:
-    <input type="text" id="login-password" [(ngModel)]="password">
+  <label for="login-password">Password:
+    <input type="text" id="login-password" name="password" [(ngModel)]="password">
   </label>
-  <label for="login-fio">E-mail:
-    <input type="text" id="login-fio" [(ngModel)]="fio">
+  <label for="login-fio">Name:
+    <input type="text" id="login-fio" name="fio" [(ngModel)]="fio">
   </label>
   <button (click)="submit(myForm)">Login</button>
 </form>
+
+<p>{{loginService.message}}</p>

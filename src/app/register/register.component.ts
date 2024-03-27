@@ -1,6 +1,9 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule, NgForm, ReactiveFormsModule} from "@angular/forms";
 import {NavbarComponent} from "../navbar/navbar.component";
+import {LoginService} from "../services/login.service";
+// import {HttpClient, HttpHandler} from "@angular/common/http";
+// import {BrowserModule} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-register',
@@ -8,22 +11,23 @@ import {NavbarComponent} from "../navbar/navbar.component";
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NavbarComponent
+    NavbarComponent,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
+  // providers: [BrowserModule, HttpClient]
+
 })
 export class RegisterComponent {
-
-  email: string = ""
-  password: string = ""
-  fio: string = ""
-
-  @Output() newEntryEvent = new EventEmitter<any>();
+  constructor( public loginService: LoginService ) {
+  }
+  email: string = "";
+  password: string = "";
+  fio: string = "";
 
   submit(form: NgForm){
     const entry = {...form.value}
-    this.newEntryEvent.emit(entry);
+    this.loginService.register(entry);
   }
 
 }
