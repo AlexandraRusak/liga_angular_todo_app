@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, Observable, of, throwError} from 'rxjs';
+import {Router} from "@angular/router";
 
 export interface User {
   email: string;
@@ -16,7 +17,8 @@ export interface Token {
 })
 export class LoginService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+              private router: Router) { }
 
   baseUrl: string = `https://api.fit-meetups.ru`;
   isLoggedIn: boolean = false;
@@ -27,6 +29,7 @@ export class LoginService {
     this.isLoggedIn = false;
     this.userName = "";
     localStorage.removeItem("token");
+    this.router.navigate([""])
   }
   public register(user: User):void {
     console.log('register func', user)
@@ -37,6 +40,7 @@ export class LoginService {
           localStorage.setItem("token", value.token);
           this.isLoggedIn = true;
           this.userName = user.fio;
+          this.router.navigate(["todo-list"])
         },
         error: err => {
           console.error(err);
@@ -55,6 +59,7 @@ export class LoginService {
           localStorage.setItem("token", value.token);
           this.isLoggedIn = true;
           this.userName = user.fio;
+          this.router.navigate(["todo-list"])
         },
         error: err => {
           console.error(err);
