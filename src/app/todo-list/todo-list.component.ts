@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {TodoEntryComponent} from "../todo-entry/todo-entry.component";
-import {TodoListService} from "../services/todo-list.service";
+import {Entry, TodoEntry, TodoListService} from "../services/todo-list.service";
 import {NgForOf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {EntryFormComponent} from "../entry-form/entry-form.component";
@@ -18,9 +18,20 @@ import {NavbarComponent} from "../navbar/navbar.component";
 export class TodoListComponent {
 
  constructor(
-   public todoListService: TodoListService
+   public todoListService: TodoListService,
+   private cdr: ChangeDetectorRef
  ) {
  }
+
+  ngOnInit(){
+    this.todoListService.initDataFromJson().subscribe(
+      value => {(<Array<Entry>>value)
+        .forEach(entry =>{
+          console.log(entry.header)
+          this.todoListService.add(entry)})
+        this.cdr.detectChanges()
+      });
+  }
 
 
 }

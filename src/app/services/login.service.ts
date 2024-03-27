@@ -2,12 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {Router} from "@angular/router";
-
-export interface User {
-  email: string;
-  password: string;
-  fio: string;
-}
+import {User} from "../user.model";
+import { environment} from "../../environments/environment";
 
 export interface Token {
   token: string;
@@ -18,17 +14,55 @@ export interface Token {
 export class LoginService {
 
   constructor(private httpClient: HttpClient,
-              private router: Router) { }
+              private router: Router) {
+    let token = this.token
+    this.logMeIn(token)
+  }
 
-  // to do: добавить метод проверки, есть ли токен в локал сторадже и загрузки профиля юзера
+  public logMeIn(token:string | null):void {
+    this.isLoggedIn = false
+    this.userName = ''
+    if (token!=null) {
+      try {
+        this.userName = this.parseJwt(token).email
+        this.isLoggedIn = true
+        localStorage.setItem("token", token);
+      } catch (e) {
+        console.error('Error during parsing token')
+      }
+    }
+  }
 
-  baseUrl: string = `https://api.fit-meetups.ru`;
   isLoggedIn: boolean = false;
   userName:string = "";
-  message: string = "";
+  // message: string = "";
 
   public get token(): string | null {
     return localStorage.getItem("token");
+  }
+
+  parseJwt(token: string) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  }
+
+  public get user(): User | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const user: User = this.parseJwt(token);
+      console.log(user)
+      return user;
+    } else return null;
   }
 
 
@@ -41,38 +75,34 @@ export class LoginService {
   public register(user: User):void {
     console.log('register func', user)
     this.httpClient
-      .post<Token>(`${this.baseUrl}/auth/registration`, user)
+      .post<Token>(`${environment.baseUrl}/auth/registration`, user)
       .subscribe({
         next: value => {
-          localStorage.setItem("token", value.token);
-          this.isLoggedIn = true;
-          this.userName = user.fio;
+          this.logMeIn(value.token)
           this.router.navigate(["todo-list"])
         },
         error: err => {
+          console.log('JWT token parser exception')
           console.error(err);
-          this.message = "Something went wrong. Please try again"
+          // this.message = "Something went wrong. Please try again"
         },
         complete: () => console.log('Complete and unsubscribe')
       });
   }
 
   public login(user: User):void {
-    console.log('login func', user)
     this.httpClient
-      .post<Token>(`${this.baseUrl}/auth/login`, user)
+      .post<Token>(`${environment.baseUrl}/auth/login`, user)
       .subscribe({
         next: value => {
-          localStorage.setItem("token", value.token);
-          this.isLoggedIn = true;
-          this.userName = user.fio;
+          this.logMeIn(value.token)
           this.router.navigate(["todo-list"])
         },
         error: err => {
           console.error(err);
-          this.message = "Something went wrong. Please try again"
+          // this.message = "Something went wrong. Please try again"
         },
-        complete: () => console.log('Complete and unsubscribe')
+        // complete: () => console.log('Complete and unsubscribe')
       });
   }
 

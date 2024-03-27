@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import {map, Observable} from "rxjs";
 
 enum EntryStatus {
   regular = "regular",
@@ -77,13 +79,15 @@ export class TodoListService {
   public todoList: Array<TodoEntry> = []
 
 
+  public initDataFromJson():Observable<object> {
+    return this.httpClient.get("assets/todo-list.json")
+  }
 
-  constructor(
+  constructor(private httpClient: HttpClient
   ) {
     // for testing
-    this.add({header: "heading 0", body: "body 0", important: true})
-    this.add({header: "heading 1", body: "body 1", important: false})
-    this.add({header: "heading 2", body: "body 2", important: false})
+
+
 
   }
 
@@ -100,6 +104,7 @@ export class TodoListService {
         obj.body,
         obj.important);
     this.todoList.push(newTodoEntry)
+    console.log(this.todoList)
   }
 
   public changeImportant(id: string): void{
