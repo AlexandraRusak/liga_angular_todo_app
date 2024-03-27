@@ -20,6 +20,8 @@ export class LoginService {
   constructor(private httpClient: HttpClient,
               private router: Router) { }
 
+  // to do: добавить метод проверки, есть ли токен в локал сторадже и загрузки профиля юзера
+
   baseUrl: string = `https://api.fit-meetups.ru`;
   isLoggedIn: boolean = false;
   userName:string = "";
